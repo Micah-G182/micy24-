@@ -14,7 +14,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
-  <h1>Bright Academy Student Report System</h1>
+  <h1>Maya Academy Student Report System</h1>
 
   <div>
     <label>Teacher Subject:</label>
@@ -109,9 +109,16 @@
 
     function calculateGrade(avg) {
       if (avg >= 80) return 'A';
-      if (avg >= 70) return 'B';
-      if (avg >= 60) return 'C';
-      if (avg >= 50) return 'D';
+      if (avg >= 75) return 'A-';
+      if (avg >= 70) return 'B+';
+      if (avg >= 65) return 'B';
+      if (avg >= 60) return 'B-';
+      if (avg >= 55) return 'C+';
+      if (avg >= 50) return 'C';
+      if (avg >= 45) return 'C-';
+      if (avg >= 40) return 'D+';
+      if (avg >= 35) return 'D';
+      if (avg >= 30) return 'D-';
       return 'E';
     }
 
@@ -122,7 +129,7 @@
       const avg = (total / subjects.length).toFixed(2);
       const grade = calculateGrade(avg);
 
-      let html = `<h2>Bright Academy</h2>
+      let html = `<h2>Maya Academy</h2>
         <p><strong>Class:</strong> ${cls}</p>
         <p><strong>Student:</strong> ${student}</p>
         <p><strong>Average Score:</strong> ${avg}</p>
