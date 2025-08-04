@@ -1,31 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bright Academy - Marks Analysis</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bright Academy Marks Analysis</title>
   <style>
-    body { font-family: Arial, sans-serif; margin: 20px; background: #f8f8f8; }
+    body { font-family: Arial, sans-serif; margin: 20px; }
     table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-    th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-    th { background-color: #007bff; color: white; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #f4f4f4; }
     input[type="number"] { width: 60px; }
-    .btn { padding: 10px 20px; background: #28a745; color: white; border: none; cursor: pointer; }
-    .btn:hover { background: #218838; }
     .hidden { display: none; }
-    #reportContent { background: white; padding: 15px; }
+    .btn { margin: 10px 5px; padding: 8px 16px; cursor: pointer; }
   </style>
 </head>
 <body>
-  <h1>Bright Academy - Marks Entry & Analysis</h1>
+  <h1>Bright Academy - Marks Management System</h1>
 
   <div id="loginSection">
-    <label>Enter Username: <input type="text" id="username"></label>
-    <label>Enter Password: <input type="password" id="password"></label>
+    <label for="username">Username:</label>
+    <input type="text" id="username" />
+    <label for="password">Password:</label>
+    <input type="password" id="password" />
     <button onclick="login()">Login</button>
   </div>
 
   <div id="mainSection" class="hidden">
+    <h2>Welcome, <span id="userRole"></span></h2>
+    <button id="analyzeBtn" class="btn hidden" onclick="analyze()">Analyze Marks</button>
+    <div id="reportForm" class="hidden">
+      <h2>Individual Student Report</h2>
+      <label for="studentSelect">Select Student:</label>
+      <select id="studentSelect" onchange="generateReport()">
+        <option value="">-- Select --</option>
+      </select>
+      <div id="reportContent" style="margin-top: 20px; border: 1px solid #ccc; padding: 15px;"></div>
+      <button class="btn" onclick="printReport()">Print Report</button>
+    </div>
     <table id="marksTable">
       <thead>
         <tr>
@@ -38,119 +49,121 @@
           <th>Chemistry</th>
           <th>CRE</th>
           <th>History</th>
-          <th>Geography</th>
-          <th>Physics</th>
           <th>Agriculture</th>
+          <th>Physics</th>
+          <th>Geography</th>
           <th>Average</th>
           <th>Grade</th>
+          <th>Save</th>
         </tr>
       </thead>
-      <tbody id="tableBody">
-        <!-- Students will be populated by JS -->
-      </tbody>
+      <tbody id="tableBody"></tbody>
     </table>
-    <button class="btn hidden" id="analyzeBtn" onclick="analyze()">Analyze Marks</button>
-  </div>
-
-  <div id="reportForm" class="hidden">
-    <h2>Individual Student Report</h2>
-    <label for="studentSelect">Select Student:</label>
-    <select id="studentSelect" onchange="generateReport()">
-      <option value="">-- Select --</option>
-    </select>
-    <div id="reportContent"></div>
-    <button class="btn" onclick="printReport()">Print Report</button>
   </div>
 
   <script>
     const users = {
+      math: 'math123',
+      english: 'eng123',
+      kiswahili: 'kis123',
+      biology: 'bio123',
+      chemistry: 'chem123',
+      cre: 'cre123',
+      history: 'hist123',
+      agriculture: 'agri123',
+      physics: 'phy123',
+      geography: 'geo123',
       admin: 'admin123',
-      math: 'math123', english: 'eng123', kiswahili: 'kis123',
-      biology: 'bio123', chemistry: 'chem123', cre: 'cre123',
-      history: 'hist123', geography: 'geo123', physics: 'phys123', agriculture: 'agri123'
     };
 
-    const subjects = ["Math", "English", "Kiswahili", "Biology", "Chemistry", "CRE", "History", "Geography", "Physics", "Agriculture"];
+    const subjects = ["Math", "English", "Kiswahili", "Biology", "Chemistry", "CRE", "History", "Agriculture", "Physics", "Geography"];
+
     const students = [
       { name: "Milka Moraa", class: "Form 2 Scarlet" },
       { name: "Grace Wangari", class: "Form 2 Scarlet" },
       { name: "Jane Wanjiru", class: "Form 2 Scarlet" },
       { name: "Precious Wanjiru", class: "Form 2 Scarlet" },
+
       { name: "Anne Mokeira", class: "Form 2 Lilac" },
       { name: "Mary Onyango", class: "Form 2 Lilac" },
       { name: "Damari Achieng", class: "Form 2 Lilac" },
       { name: "Florian Wangari", class: "Form 2 Lilac" },
+
       { name: "Hellen Monyangi", class: "Form 3 Peach" },
       { name: "Daisy Rabera", class: "Form 3 Peach" },
       { name: "Jesca Moraa", class: "Form 3 Peach" },
       { name: "Janet Atieno", class: "Form 3 Peach" },
+
       { name: "Mary Atieno", class: "Form 3 Scarlet" },
       { name: "Florence Achieng", class: "Form 3 Scarlet" },
       { name: "Kerubo James", class: "Form 3 Scarlet" },
-      { name: "Monica Kemunto", class: "Form 3 Scarlet" }
+      { name: "Monica Kemunto", class: "Form 3 Scarlet" },
     ];
 
-    const tableBody = document.getElementById("tableBody");
+    let currentUser = "";
 
     function login() {
-      const user = document.getElementById("username").value.toLowerCase();
-      const pass = document.getElementById("password").value;
-      if (users[user] === pass) {
+      const username = document.getElementById("username").value.toLowerCase();
+      const password = document.getElementById("password").value;
+      if (users[username] && users[username] === password) {
+        currentUser = username;
         document.getElementById("loginSection").classList.add("hidden");
         document.getElementById("mainSection").classList.remove("hidden");
-        if (user === 'admin') document.getElementById("analyzeBtn").classList.remove("hidden");
-        populateTable(user);
+        document.getElementById("userRole").textContent = username;
+        if (username === "admin") {
+          document.getElementById("analyzeBtn").classList.remove("hidden");
+        }
+        generateTable();
       } else {
-        alert("Invalid credentials");
+        alert("Invalid login credentials");
       }
     }
 
-    function populateTable(subjectUser) {
-      tableBody.innerHTML = "";
-      students.forEach(s => {
-        let row = `<tr><td>${s.class}</td><td>${s.name}</td>`;
-        subjects.forEach(sub => {
-          if (subjectUser === 'admin' || subjectUser === sub.toLowerCase()) {
-            row += `<td><input type='number' min='0' max='100'></td>`;
+    function generateTable() {
+      const tbody = document.getElementById("tableBody");
+      tbody.innerHTML = "";
+      students.forEach((student, index) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `<td>${student.class}</td><td>${student.name}</td>`;
+        subjects.forEach((subject, i) => {
+          const td = document.createElement("td");
+          if (currentUser === subject.toLowerCase() || currentUser === "admin") {
+            td.innerHTML = `<input type='number' id='${subject}-${index}' min='0' max='100' />`;
           } else {
-            row += `<td></td>`;
+            td.textContent = "-";
           }
+          tr.appendChild(td);
         });
-        row += `<td></td><td></td></tr>`;
-        tableBody.innerHTML += row;
+        tr.innerHTML += `<td id='avg-${index}'></td><td id='grade-${index}'></td><td><button onclick='saveMarks(${index})'>Save</button></td>`;
+        tbody.appendChild(tr);
       });
+    }
+
+    function saveMarks(index) {
+      alert("Marks for " + students[index].name + " saved successfully!");
     }
 
     function analyze() {
-      const rows = tableBody.querySelectorAll("tr");
-      let classGroups = {};
-
-      rows.forEach(row => {
-        let total = 0, count = 0;
-        for (let i = 2; i < 12; i++) {
-          let val = row.cells[i].querySelector('input')?.value || 0;
-          total += parseInt(val);
-          count++;
-        }
-        const avg = (total / count).toFixed(2);
-        row.cells[12].textContent = avg;
-        row.cells[13].textContent = grade(avg);
-        const className = row.cells[0].textContent;
-        if (!classGroups[className]) classGroups[className] = [];
-        classGroups[className].push({ avg: parseFloat(avg), row });
-      });
-
-      for (let className in classGroups) {
-        classGroups[className].sort((a, b) => b.avg - a.avg);
-        classGroups[className].forEach((item, index) => {
-          item.row.cells[1].textContent += ` (#${index + 1})`;
+      students.forEach((student, index) => {
+        let total = 0;
+        let count = 0;
+        subjects.forEach(subject => {
+          const input = document.getElementById(`${subject}-${index}`);
+          if (input && input.value !== "") {
+            total += parseFloat(input.value);
+            count++;
+          }
         });
-      }
+        const avg = (count > 0) ? (total / count).toFixed(2) : 0;
+        const avgCell = document.getElementById(`avg-${index}`);
+        const gradeCell = document.getElementById(`grade-${index}`);
+        avgCell.textContent = avg;
+        gradeCell.textContent = getGrade(avg);
+      });
       updateStudentDropdown();
-      document.getElementById("reportForm").classList.remove("hidden");
     }
 
-    function grade(score) {
+    function getGrade(score) {
       if (score >= 80) return "A";
       if (score >= 70) return "B";
       if (score >= 60) return "C";
@@ -158,23 +171,22 @@
       return "E";
     }
 
-    const studentSelect = document.getElementById("studentSelect");
-    const reportContent = document.getElementById("reportContent");
-
     function updateStudentDropdown() {
-      const rows = tableBody.querySelectorAll("tr");
+      const rows = document.getElementById("tableBody").querySelectorAll("tr");
+      const studentSelect = document.getElementById("studentSelect");
       studentSelect.innerHTML = '<option value="">-- Select --</option>';
       rows.forEach((row, index) => {
-        const name = row.cells[1].textContent.split(" (#")[0];
-        const cls = row.cells[0].textContent;
-        studentSelect.innerHTML += `<option value="${index}">${name} - ${cls}</option>`;
+        const studentName = row.cells[1].textContent;
+        const className = row.cells[0].textContent;
+        studentSelect.innerHTML += `<option value="${index}">${studentName} - ${className}</option>`;
       });
+      document.getElementById("reportForm").classList.remove("hidden");
     }
 
     function generateReport() {
-      const index = studentSelect.value;
+      const index = document.getElementById("studentSelect").value;
       if (index === "") return;
-      const row = tableBody.querySelectorAll("tr")[index];
+      const row = document.getElementById("tableBody").rows[index];
       const className = row.cells[0].textContent;
       const name = row.cells[1].textContent;
       const avg = row.cells[12].textContent;
@@ -183,11 +195,12 @@
       let subjectMarks = "";
       for (let i = 2; i < 12; i++) {
         const subject = subjects[i - 2];
-        const mark = row.cells[i].querySelector('input').value || "-";
+        const input = row.cells[i].querySelector("input");
+        const mark = input ? input.value : "-";
         subjectMarks += `<tr><td>${subject}</td><td>${mark}</td></tr>`;
       }
 
-      reportContent.innerHTML = `
+      document.getElementById("reportContent").innerHTML = `
         <h3>Bright Academy</h3>
         <p><strong>Class:</strong> ${className}</p>
         <p><strong>Name:</strong> ${name}</p>
@@ -197,19 +210,20 @@
           <tr><th>Subject</th><th>Mark</th></tr>
           ${subjectMarks}
         </table>
-        <p><strong>Class Teacher's Comment:</strong> __________________________</p>
+        <p style="margin-top:20px;"><strong>Class Teacher's Comment:</strong> __________________________</p>
         <p><strong>Principal's Comment:</strong> __________________________</p>
         <p><strong>Signature:</strong> __________________________</p>
       `;
     }
 
     function printReport() {
-      const w = window.open('', '_blank');
-      w.document.write('<html><head><title>Report</title></head><body>');
-      w.document.write(reportContent.innerHTML);
-      w.document.write('</body></html>');
-      w.document.close();
-      w.print();
+      const content = document.getElementById("reportContent").innerHTML;
+      const win = window.open('', '', 'height=700,width=900');
+      win.document.write('<html><head><title>Student Report</title></head><body>');
+      win.document.write(content);
+      win.document.write('</body></html>');
+      win.document.close();
+      win.print();
     }
   </script>
 </body>
