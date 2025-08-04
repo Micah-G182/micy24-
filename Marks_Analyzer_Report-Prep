@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bright Academy Report System</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    h1, h2 { text-align: center; }
+    select, input[type="number"], button { margin: 10px; padding: 5px; }
+    .report, .analysis { margin-top: 20px; padding: 15px; border: 1px solid #ccc; }
+    .signature-block textarea { width: 100%; height: 40px; margin-top: 10px; }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+  <h1>Bright Academy Student Report System</h1>
+
+  <div>
+    <label>Teacher Subject:</label>
+    <select id="teacherSubject">
+      <option value="math">Math</option>
+      <option value="english">English</option>
+      <option value="biology">Biology</option>
+      <option value="chemistry">Chemistry</option>
+      <option value="kiswahili">Kiswahili</option>
+      <option value="cre">CRE</option>
+      <option value="history">History</option>
+      <option value="agriculture">Agriculture</option>
+      <option value="physics">Physics</option>
+      <option value="geography">Geography</option>
+    </select>
+    <label>Password:</label>
+    <input type="password" id="teacherPassword">
+    <button onclick="loginTeacher()">Login</button>
+  </div>
+
+  <div id="markEntry" style="display:none">
+    <label>Select Class:</label>
+    <select id="classSelect" onchange="populateStudents()">
+      <option value="Form 2 Scarlet">Form 2 Scarlet</option>
+      <option value="Form 2 Lilac">Form 2 Lilac</option>
+      <option value="Form 3 Peach">Form 3 Peach</option>
+      <option value="Form 3 Scarlet">Form 3 Scarlet</option>
+    </select>
+    <label>Select Student:</label>
+    <select id="studentSelect"></select>
+    <label>Enter Marks:</label>
+    <input type="number" id="marksInput" min="0" max="100">
+    <button onclick="submitMarks()">Submit Marks</button>
+  </div>
+
+  <div class="report" id="reportCard"></div>
+  <div class="analysis" id="analysis"></div>
+
+  <script>
+    const passwords = {
+      math: "math123", english: "eng123", biology: "bio123",
+      chemistry: "chem123", kiswahili: "kis123", cre: "cre123",
+      history: "hist123", agriculture: "agri123", physics: "phy123",
+      geography: "geo123"
+    };
+
+    const students = {
+      "Form 2 Scarlet": ["Milka Moraa", "Grace Wangari", "Jane Wanjiru", "Precious Wanjiru"],
+      "Form 2 Lilac": ["Anne Mokeira", "Mary Onyango", "Damari Achieng", "Florian Wangari"],
+      "Form 3 Peach": ["Hellen Monyangi", "Daisy Rabera", "Jesca Moraa", "Janet Atieno"],
+      "Form 3 Scarlet": ["Mary Atieno", "Florence Achieng", "Kerubo James", "Monica Kemunto"]
+    };
+
+    const marksData = {};
+
+    function loginTeacher() {
+      const subject = document.getElementById('teacherSubject').value;
+      const password = document.getElementById('teacherPassword').value;
+      if (passwords[subject] === password) {
+        document.getElementById('markEntry').style.display = 'block';
+        alert('Login successful for ' + subject);
+      } else {
+        alert('Invalid password');
+      }
+    }
+
+    function populateStudents() {
+      const cls = document.getElementById('classSelect').value;
+      const studentSelect = document.getElementById('studentSelect');
+      studentSelect.innerHTML = '';
+      students[cls].forEach(name => {
+        const opt = document.createElement('option');
+        opt.value = name;
+        opt.textContent = name;
+        studentSelect.appendChild(opt);
+      });
+    }
+
+    function submitMarks() {
+      const cls = document.getElementById('classSelect').value;
+      const student = document.getElementById('studentSelect').value;
+      const marks = parseInt(document.getElementById('marksInput').value);
+      const subject = document.getElementById('teacherSubject').value;
+
+      if (!marksData[cls]) marksData[cls] = {};
+      if (!marksData[cls][student]) marksData[cls][student] = {};
+      marksData[cls][student][subject] = marks;
+
+      displayReport(cls, student);
+      displayAnalysis(cls, subject);
+    }
+
+    function calculateGrade(avg) {
+      if (avg >= 80) return 'A';
+      if (avg >= 70) return 'B';
+      if (avg >= 60) return 'C';
+      if (avg >= 50) return 'D';
+      return 'E';
+    }
+
+    function displayReport(cls, student) {
+      const scores = marksData[cls][student];
+      const subjects = Object.keys(scores);
+      const total = subjects.reduce((sum, s) => sum + scores[s], 0);
+      const avg = (total / subjects.length).toFixed(2);
+      const grade = calculateGrade(avg);
+
+      let html = `<h2>Bright Academy</h2>
+        <p><strong>Class:</strong> ${cls}</p>
+        <p><strong>Student:</strong> ${student}</p>
+        <p><strong>Average Score:</strong> ${avg}</p>
+        <p><strong>Grade:</strong> ${grade}</p>
+        <h3>Subject Scores</h3>
+        <ul>`;
+      subjects.forEach(s => html += `<li>${s.toUpperCase()}: ${scores[s]}</li>`);
+      html += `</ul>
+        <div class="signature-block" id="reportContent">
+        <p><strong>Class Teacher's Comment:</strong></p><textarea></textarea>
+        <p><strong>Class Teacher's Signature:</strong></p><textarea></textarea>
+        <p><strong>Principal's Comment:</strong></p><textarea></textarea>
+        <p><strong>Principal's Signature:</strong></p><textarea></textarea>
+        </div>
+        <div style="margin-top:20px;">
+        <button onclick="window.print()">🖨️ Print Report</button>
+        <button onclick="downloadPDF()">⬇️ Download as PDF</button>
+        <button onclick="downloadWord()">⬇️ Download as Word</button>
+        </div>`;
+
+      document.getElementById('reportCard').innerHTML = html;
+    }
+
+    function displayAnalysis(cls, subject) {
+      const scores = [];
+      for (const student of students[cls]) {
+        const subMarks = marksData[cls]?.[student]?.[subject];
+        if (subMarks !== undefined) scores.push(subMarks);
+      }
+      const mean = (scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(2);
+
+      const gradeDist = { A: 0, B: 0, C: 0, D: 0, E: 0 };
+      scores.forEach(score => gradeDist[calculateGrade(score)]++);
+
+      const analysis = `
+        <h3>Analysis for ${subject.toUpperCase()} in ${cls}</h3>
+        <p><strong>Mean Score:</strong> ${mean}</p>
+        <ul>
+          <li>A: ${gradeDist.A}</li>
+          <li>B: ${gradeDist.B}</li>
+          <li>C: ${gradeDist.C}</li>
+          <li>D: ${gradeDist.D}</li>
+          <li>E: ${gradeDist.E}</li>
+        </ul>
+      `;
+      document.getElementById('analysis').innerHTML = analysis;
+    }
+
+    function downloadPDF() {
+      const element = document.getElementById('reportContent').parentElement;
+      html2pdf().from(element).set({
+        margin: 0.5,
+        filename: 'Bright_Academy_Report.pdf',
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+      }).save();
+    }
+
+    function downloadWord() {
+      const header = "<html xmlns:o='urn:schemas-microsoft-com:office:office' "+
+                     "xmlns:w='urn:schemas-microsoft-com:office:word' "+
+                     "xmlns='http://www.w3.org/TR/REC-html40'>"+
+                     "<head><meta charset='utf-8'><title>Export</title></head><body>";
+      const footer = "</body></html>";
+      const content = document.getElementById("reportContent").parentElement.innerHTML;
+      const sourceHTML = header + content + footer;
+      const source = 'data:application/vnd.ms-word;charset=utf-8,' + encodeURIComponent(sourceHTML);
+      const fileDownload = document.createElement("a");
+      document.body.appendChild(fileDownload);
+      fileDownload.href = source;
+      fileDownload.download = 'Bright_Academy_Report.doc';
+      fileDownload.click();
+      document.body.removeChild(fileDownload);
+    }
+
+    window.onload = populateStudents;
+  </script>
+</body>
+</html>
