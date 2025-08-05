@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bright Academy Marks System</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f8f9fa; }
+    .login, .teacher-section, .admin-section, .report, .booklet, .charts, .password-section { margin: 20px 0; padding: 15px; background: white; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 5px; text-align: center; }
+    h2, h3 { margin: 5px 0; }
+    .report { page-break-after: always; border: 1px solid #ddd; padding: 15px; }
+    .btn { margin: 5px; padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer; }
+    .btn:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <div class="login">
+    <h2>Login</h2>
+    <input type="password" id="password" placeholder="Enter Password" />
+    <button onclick="login()" class="btn">Login</button>
+  </div>
+
+  <div id="teacherSection" class="teacher-section" style="display:none">
+    <h2>Subject Marks Entry</h2>
+    <label>Class: <select id="classSelect"></select></label>
+    <table id="marksTable"></table>
+    <button onclick="saveMarks()" class="btn">Save Marks</button>
+  </div>
+
+  <div id="adminSection" class="admin-section" style="display:none">
+    <h2>Admin Panel</h2>
+    <label>Class: <select id="classSelectAdmin" onchange="enableAdminActions()"></select></label>
+    <button id="analyzeBtn" onclick="analyzeClass()" class="btn" disabled>Analyze Class</button>
+    <button id="reportBtn" onclick="generateReports()" class="btn" disabled>Generate Reports</button>
+    <input type="file" onchange="importCSV(event)" class="btn" />
+    <button onclick="exportCSV()" class="btn">Export CSV</button>
+    <input type="file" onchange="uploadLogo(event)" class="btn" />
+  </div>
+
+  <div class="charts">
+    <canvas id="barChart"></canvas>
+  </div>
+
+  <div class="booklet">
+    <h2>Student Report Booklet</h2>
+    <div id="reportCards"></div>
+    <button onclick="window.print()" class="btn">Print Reports</button>
+  </div>
+
+  <div class="password-section">
+    <h3>Change Password</h3>
+    <input type="password" id="currentPass" placeholder="Current Password" />
+    <input type="password" id="newPass" placeholder="New Password" />
+    <button onclick="changePassword()" class="btn">Change</button>
+  </div>
+
+<script>
+let passwords = {
+  "admin123": "admin",
+  "math123": "Mathematics",
+  "eng123": "English",
+  "phy123": "Physics",
+  "bio123": "Biology",
+  "chem123": "Chemistry",
+  "kis123": "Kiswahili",
+  "cre123": "CRE",
+  "hist123": "History",
+  "agr123": "Agriculture",
+  "geo123": "Geography"
+};
+
+const subjects = Object.values(passwords).filter(p => p !== "admin");
+const students = {
+  "Form 2 Scarlet": ["Milka Moraa", "Grace Wangari", "Jane Wanjiru", "Precious Wanjiru"],
+  "Form 2 Lilac": ["Anne Mokeira", "Mary Onyango", "Damari Achieng", "Florian Wangari"],
+  "Form 3 Peach": ["Hellen Monyangi", "Daisy Rabera", "Jesca Moraa", "Janet Atieno"],
+  "Form 3 Scarlet": ["Mary Atieno", "Florence Achieng", "Kerubo James", "Monica Kemunto"]
+};
+
+let loggedInSubject = "";
+let logoBase64 = localStorage.getItem("schoolLogo") || "";
+
+function login() {
+  const pass = document.getElementById("password").value;
+  if (!passwords[pass]) return alert("Wrong password");
+  const role = passwords[pass];
+  if (role === "admin") {
+    document.getElementById("adminSection").style.display = "block";
+    populateClassSelect("classSelectAdmin");
+  } else {
+    document.getElementById("teacherSection").style.display = "block";
+    populateClassSelect("classSelect");
+    loggedInSubject = role;
+  }
+  document.querySelector(".login").style.display = "none";
+}
+
+function populateClassSelect(id) {
+  const sel = document.getElementById(id);
+  sel.innerHTML = "<option disabled selected>Select Class</option>";
+  for (let cls in students) sel.innerHTML += `<option value="${cls}">${cls}</option>`;
+  if (id === "classSelect") sel.onchange = renderMarksTable;
+}
+
+function enableAdminActions() {
+  document.getElementById("analyzeBtn").disabled = false;
+  document.getElementById("reportBtn").disabled = false;
+}
+
+function renderMarksTable() {
+  const cls = document.getElementById("classSelect").value;
+  const table = document.getElementById("marksTable");
+  const saved = JSON.parse(localStorage.getItem(`marks_${cls}_${loggedInSubject}`) || "{}");
+  table.innerHTML = `<tr><th>Student</th><th>Marks (0-100)</th></tr>` +
+    students[cls].map(name => `<tr><td>${name}</td><td><input type='number' min='0' max='100' value='${saved[name] || ""}' id='${name}' /></td></tr>`).join("");
+}
+
+function saveMarks() {
+  const cls = document.getElementById("classSelect").value;
+  const data = {};
+  students[cls].forEach(name => {
+    data[name] = parseInt(document.getElementById(name).value) || 0;
+  });
+  localStorage.setItem(`marks_${cls}_${loggedInSubject}`, JSON.stringify(data));
+  alert("Marks saved successfully");
+}
+
+function grade(m) {
+  if (m >= 80) return "A";
+  if (m >= 70) return "B";
+  if (m >= 60) return "C";
+  if (m >= 50) return "D";
+  return "E";
+}
+
+function getAllMarks(cls) {
+  const marks = {};
+  subjects.forEach(sub => {
+    marks[sub] = JSON.parse(localStorage.getItem(`marks_${cls}_${sub}`) || "{}");
+  });
+  return marks;
+}
+
+function analyzeClass() {
+  const cls = document.getElementById("classSelectAdmin").value;
+  const data = getAllMarks(cls);
+  const avg = {};
+  students[cls].forEach(s => {
+    let sum = 0, count = 0;
+    subjects.forEach(sub => {
+      const m = data[sub][s];
+      if (m !== undefined) {
+        sum += m;
+        count++;
+      }
+    });
+    avg[s] = count > 0 ? sum / count : 0;
+  });
+  const labels = Object.keys(avg);
+  const values = labels.map(s => avg[s]);
+  new Chart(document.getElementById("barChart"), {
+    type: "bar",
+    data: { labels, datasets: [{ label: "Average Marks", data: values, backgroundColor: "#28a745" }] },
+    options: { responsive: true, plugins: { legend: { display: true } } }
+  });
+}
+
+function generateReports() {
+  const cls = document.getElementById("classSelectAdmin").value;
+  const data = getAllMarks(cls);
+  const container = document.getElementById("reportCards");
+  container.innerHTML = "";
+  students[cls].forEach(s => {
+    let sum = 0, count = 0, subjectLines = "";
+    subjects.forEach(sub => {
+      const m = data[sub][s];
+      if (m !== undefined) {
+        subjectLines += `<tr><td>${sub}</td><td>${m}</td><td>${grade(m)}</td></tr>`;
+        sum += m;
+        count++;
+      }
+    });
+    const avg = count > 0 ? sum / count : 0;
+    const g = grade(avg);
+    container.innerHTML += `
+      <div class='report'>
+        ${logoBase64 ? `<img src='${logoBase64}' width='100'/>` : ""}
+        <h2>Bright Academy</h2>
+        <h3>Class: ${cls}</h3>
+        <h3>Student: ${s}</h3>
+        <table>
+          <tr><th>Subject</th><th>Marks</th><th>Grade</th></tr>
+          ${subjectLines}
+          <tr><td colspan='2'>Average</td><td>${avg.toFixed(2)} (${g})</td></tr>
+        </table>
+        <p>Class Teacher's Comment: ____________</p>
+        <p>Class Teacher's Signature: ____________</p>
+        <p>Principal's Comment: ________________</p>
+        <p>Principal's Signature: ________________</p>
+      </div>`;
+  });
+}
+
+function changePassword() {
+  const old = document.getElementById("currentPass").value;
+  const newp = document.getElementById("newPass").value;
+  if (!passwords[old]) return alert("Incorrect current password");
+  passwords[newp] = passwords[old];
+  delete passwords[old];
+  alert("Password changed");
+}
+
+function uploadLogo(e) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    localStorage.setItem("schoolLogo", reader.result);
+    alert("Logo uploaded successfully");
+  };
+  reader.readAsDataURL(e.target.files[0]);
+}
+
+function importCSV(e) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    const lines = reader.result.split("\n");
+    const [cls, sub] = lines[0].split(",");
+    const data = {};
+    for (let i = 1; i < lines.length; i++) {
+      const [name, mark] = lines[i].split(",");
+      if (name) data[name] = parseInt(mark);
+    }
+    localStorage.setItem(`marks_${cls}_${sub}`, JSON.stringify(data));
+    alert("Data imported");
+  };
+  reader.readAsText(e.target.files[0]);
+}
+
+function exportCSV() {
+  const cls = document.getElementById("classSelectAdmin").value;
+  subjects.forEach(sub => {
+    const data = JSON.parse(localStorage.getItem(`marks_${cls}_${sub}`) || "{}");
+    let csv = `${cls},${sub}\n`;
+    for (let name in data) csv += `${name},${data[name]}\n`;
+    const blob = new Blob([csv], { type: "text/csv" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `${cls}_${sub}.csv`;
+    a.click();
+  });
+}
+</script>
+</body>
+</html>
