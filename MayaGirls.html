@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Maya Girls Secondary School - Naivasha</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; background:#f9fff9; color:#333; }
+header { background: green; color:white; padding:20px; text-align:center; border-bottom:6px double brown; }
+nav { display:flex; justify-content:center; background:#eee; border-bottom:2px solid brown; flex-wrap:wrap; }
+nav a { padding:14px 20px; text-decoration:none; color:green; font-weight:bold; }
+nav a:hover { background:brown; color:white; }
+section { padding:30px; display:none; }
+h2 { color:green; border-bottom:2px solid brown; padding-bottom:5px; }
+footer { background: green; color:white; text-align:center; padding:15px; border-top:6px double brown; margin-top:20px; }
+textarea, input, select { width:100%; margin-top:10px; padding:8px; }
+button { margin-top:10px; padding:8px 14px; background:green; color:white; border:none; cursor:pointer; }
+button:hover { background:brown; }
+.hidden { display:none; }
+.card { border:1px solid brown; padding:10px; margin:10px 0; background:#fff; }
+</style>
+</head>
+<body>
+
+<header>
+<h1>Maya Girls Secondary School - Naivasha</h1>
+</header>
+
+<nav>
+<a href="#home" onclick="showSection('home')">Home</a>
+<a href="#academics" onclick="showSection('academics')">Academics</a>
+<a href="#clubs" onclick="showSection('clubs')">Clubs & Societies</a>
+<a href="#extracurricular" onclick="showSection('extracurricular')">Extra Curricular</a>
+<a href="#location" onclick="showSection('location')">Location</a>
+<a href="#news" onclick="showSection('news')">News & Events</a>
+<a href="#admissions" onclick="showSection('admissions')">Admissions</a>
+<a href="#contact" onclick="showSection('contact')">Contact Admin</a>
+<a href="#admin" onclick="showSection('admin')">Admin</a>
+</nav>
+
+<section id="home" style="display:block;">
+<h2>Welcome</h2>
+<p>Welcome to Maya Girls Secondary School, Naivasha. Dilligence is the anchor of success.</p>
+</section>
+
+<section id="academics">
+<h2>Academics</h2>
+<div id="academicsContent"></div>
+<div id="academicsAdmin" class="hidden">
+<textarea id="academicsInput" placeholder="Enter subjects or academic details..."></textarea>
+<input type="file" id="academicsFile">
+<label><input type="checkbox" id="academicsAdminOnly"> Admin Only Download</label>
+<button onclick="saveContent('academics')">Save</button>
+<button onclick="clearSection('academics')">Clear All</button>
+</div>
+</section>
+
+<section id="clubs">
+<h2>Clubs & Societies</h2>
+<div id="clubsContent"></div>
+<div id="clubsAdmin" class="hidden">
+<textarea id="clubsInput" placeholder="Enter details of clubs and societies..."></textarea>
+<input type="file" id="clubsFile">
+<label><input type="checkbox" id="clubsAdminOnly"> Admin Only Download</label>
+<button onclick="saveContent('clubs')">Save</button>
+<button onclick="clearSection('clubs')">Clear All</button>
+</div>
+</section>
+
+<section id="extracurricular">
+<h2>Extra Curricular Activities</h2>
+<div id="extracurricularContent"></div>
+<div id="extracurricularAdmin" class="hidden">
+<textarea id="extracurricularInput" placeholder="Enter extracurricular details..."></textarea>
+<input type="file" id="extracurricularFile">
+<label><input type="checkbox" id="extracurricularAdminOnly"> Admin Only Download</label>
+<button onclick="saveContent('extracurricular')">Save</button>
+<button onclick="clearSection('extracurricular')">Clear All</button>
+</div>
+</section>
+
+<section id="location">
+<h2>Location</h2>
+<div id="locationContent"></div>
+<div id="locationAdmin" class="hidden">
+<textarea id="locationInput" placeholder="Enter school location info..."></textarea>
+<input type="file" id="locationFile">
+<label><input type="checkbox" id="locationAdminOnly"> Admin Only Download</label>
+<button onclick="saveContent('location')">Save</button>
+<button onclick="clearSection('location')">Clear All</button>
+</div>
+</section>
+
+<section id="news">
+<h2>News & Events</h2>
+<div id="newsContent"></div>
+<div id="newsAdmin" class="hidden">
+<textarea id="newsInput" placeholder="Enter news or event details..."></textarea>
+<input type="file" id="newsFile">
+<label><input type="checkbox" id="newsAdminOnly"> Admin Only Download</label>
+<button onclick="saveContent('news')">Post</button>
+<button onclick="clearSection('news')">Clear All</button>
+</div>
+</section>
+
+<section id="admissions">
+<h2>New Admissions</h2>
+<form id="admissionForm">
+<input type="text" id="studentName" placeholder="Student Full Name" required>
+<input type="text" id="parentPhone" placeholder="Parent Phone Number" required>
+<input type="email" id="studentEmail" placeholder="Email Address" required>
+<select id="classToJoin" required>
+<option value="">Select Class</option>
+<option>Grade 10</option>
+<option>Grade 11</option>
+<option>Grade 12</option>
+<option>Form 3</option>
+<option>Form 4</option>
+</select>
+<button type="submit">Submit</button>
+</form>
+<div id="admissionsAdmin" class="hidden">
+<h3>Admissions Records</h3>
+<div id="admissionsList"></div>
+<button onclick="downloadAdmissions()">Download JSON (Admin Only)</button>
+<button onclick="printAdmissions()">Print</button>
+<button onclick="clearAdmissions()">Clear All</button>
+</div>
+</section>
+
+<section id="contact">
+<h2>Contact Admin</h2>
+<form id="contactForm">
+<input type="text" id="senderName" placeholder="Your Name" required>
+<input type="email" id="senderEmail" placeholder="Your Email" required>
+<textarea id="message" placeholder="Your Message" required></textarea>
+<button type="submit">Send</button>
+</form>
+<div id="messagesAdmin" class="hidden">
+<h3>Confidential Messages</h3>
+<div id="messagesList"></div>
+</div>
+</section>
+
+<section id="admin">
+<h2>Admin Panel</h2>
+<div id="loginSection">
+<input type="password" id="adminPassword" placeholder="Enter Admin Password">
+<button onclick="login()">Login</button>
+</div>
+<div id="adminSection" class="hidden">
+<button onclick="logout()">Logout</button>
+<h3>Change Password</h3>
+<input type="password" id="newPassword" placeholder="New Password">
+<button onclick="changePassword()">Change Password</button>
+</div>
+</section>
+
+<footer>
+<p>&copy; 2025 Maya Girls Secondary School - Naivasha</p>
+</footer>
+
+<script>
+let adminPass = localStorage.getItem("adminPass") || "admin123";
+let isAdmin = false;
+
+function showSection(id){
+  document.querySelectorAll('section').forEach(s=>s.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+
+function login(){
+  let pass = document.getElementById("adminPassword").value;
+  if(pass===adminPass){
+    isAdmin=true;
+    document.getElementById("loginSection").classList.add("hidden");
+    document.getElementById("adminSection").classList.remove("hidden");
+    document.querySelectorAll("[id$='Admin']").forEach(e=>e.classList.remove("hidden"));
+    loadAdmissions(); loadMessages();
+    renderSections(["academics","clubs","extracurricular","location","news"]);
+    alert("Admin logged in!");
+  }else{alert("Wrong Password!");}
+}
+function logout(){
+  isAdmin=false;
+  document.getElementById("loginSection").classList.remove("hidden");
+  document.getElementById("adminSection").classList.add("hidden");
+  document.querySelectorAll("[id$='Admin']").forEach(e=>e.classList.add("hidden"));
+  renderSections(["academics","clubs","extracurricular","location","news"]);
+}
+function changePassword(){
+  let np=document.getElementById("newPassword").value;
+  if(np){adminPass=np;localStorage.setItem("adminPass",np);alert("Password changed!");}
+}
+
+// Save content for sections with admin-only download
+function saveContent(section){
+  let text=document.getElementById(section+"Input").value;
+  let fileInput=document.getElementById(section+"File");
+  let adminOnly = document.getElementById(section+"AdminOnly")?.checked || false;
+  let list = JSON.parse(localStorage.getItem(section+"Content")||"[]");
+
+  if(text) list.push({type:"text", content:text});
+  
+  if(fileInput.files.length>0){
+    let file=fileInput.files[0];
+    let reader=new FileReader();
+    reader.onload=function(e){
+      list.push({type:"file", name:file.name, url:e.target.result, adminOnly:adminOnly});
+      localStorage.setItem(section+"Content",JSON.stringify(list));
+      renderSection(section);
+    }
+    reader.readAsDataURL(file);
+  } else {
+    localStorage.setItem(section+"Content",JSON.stringify(list));
+    renderSection(section);
+  }
+}
+
+// Render section content according to admin-only rules
+function renderSections(sections){ sections.forEach(renderSection); }
+function renderSection(section){
+  let list = JSON.parse(localStorage.getItem(section+"Content")||"[]");
+  let html = "";
+  list.forEach(item => {
+    if(item.type==="text"){
+      html += `<div class='card'>${item.content}</div>`;
+    } else if(item.type==="file"){
+      if(!item.adminOnly || isAdmin){
+        html += `<div class='card'><a href="${item.url}" download="${item.name}">${item.name}</a> ${item.adminOnly?"(Admin Only)":""}</div>`;
+      }
+    }
+  });
+  document.getElementById(section+"Content").innerHTML = html;
+}
+
+function clearSection(section){
+  if(confirm("Are you sure you want to clear all content in this section?")){
+    localStorage.removeItem(section+"Content");
+    renderSection(section);
+  }
+}
+
+// Admissions handling
+document.getElementById("admissionForm").onsubmit=function(e){
+  e.preventDefault();
+  let rec={name:document.getElementById("studentName").value, phone:document.getElementById("parentPhone").value,email:document.getElementById("studentEmail").value,class:document.getElementById("classToJoin").value};
+  let list=JSON.parse(localStorage.getItem("admissions")||"[]");
+  list.push(rec);
+  localStorage.setItem("admissions",JSON.stringify(list));
+  alert("Admission submitted!");
+  this.reset();
+  loadAdmissions();
+}
+function loadAdmissions(){
+  let list=JSON.parse(localStorage.getItem("admissions")||"[]");
+  let html="";
+  list.forEach((r,i)=>{html+=`<div class='card'>${i+1}. ${r.name} - ${r.class}, Phone:${r.phone}, Email:${r.email}${isAdmin?` <button onclick="deleteAdmission(${i})">Delete</button>`:""}</div>`});
+  document.getElementById("admissionsList").innerHTML=html;
+}
+function deleteAdmission(i){
+  if(confirm("Are you sure you want to delete this admission record?")){
+    let list=JSON.parse(localStorage.getItem("admissions")||"[]");
+    list.splice(i,1);
+    localStorage.setItem("admissions",JSON.stringify(list));
+    loadAdmissions();
+  }
+}
+function downloadAdmissions(){
+  if(!isAdmin){ alert("Only admin can download admissions data."); return; }
+  let data=localStorage.getItem("admissions")||"[]";
+  let blob=new Blob([data],{type:"application/json"});
+  let a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="admissions.json";
+  a.click();
+}
+function printAdmissions(){
+  let w=window.open(); w.document.write(document.getElementById("admissionsList").innerHTML); w.print(); w.close();
+}
+function clearAdmissions(){if(confirm("Are you sure you want to clear all admissions?")){localStorage.removeItem("admissions"); loadAdmissions();}}
+
+// Contact Admin
+document.getElementById("contactForm").onsubmit=function(e){
+  e.preventDefault();
+  let msg={name:document.getElementById("senderName").value,email:document.getElementById("senderEmail").value,message:document.getElementById("message").value};
+  let msgs=JSON.parse(localStorage.getItem("messages")||"[]"); msgs.push(msg);
+  localStorage.setItem("messages",JSON.stringify(msgs));
+  alert("Message sent confidentially to Admin!");
+  this.reset();
+  loadMessages();
+}
+function loadMessages(){
+  let msgs=JSON.parse(localStorage.getItem("messages")||"[]");
+  let html="";
+  msgs.forEach((m,i)=>{html+=`<div class='card'><b>${m.name}</b> (${m.email}): ${m.message} ${isAdmin?`<button onclick="deleteMessage(${i})">Delete</button>`:""}</div>`});
+  document.getElementById("messagesList").innerHTML=html;
+}
+function deleteMessage(i){
+  if(confirm("Are you sure you want to delete this message?")){
+    let msgs=JSON.parse(localStorage.getItem("messages")||"[]");
+    msgs.splice(i,1);
+    localStorage.setItem("messages",JSON.stringify(msgs));
+    loadMessages();
+  }
+}
+
+// Load stored content
+renderSections(["academics","clubs","extracurricular","location","news"]);
+</script>
+
+</body>
+</html>
