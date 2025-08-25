@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Portal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #003366;
+      color: white;
+      padding: 15px;
+      text-align: center;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0px 4px 8px rgba(0,0,0,0.1);
+    }
+    .hidden { display: none; }
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-bottom: 15px;
+    }
+    nav button {
+      flex: 1 1 auto;
+      min-width: 120px;
+      padding: 10px;
+      border: none;
+      background: #003366;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    nav button:hover {
+      background: #0055aa;
+    }
+    .logout {
+      background: crimson;
+    }
+    .section {
+      margin-top: 20px;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 6px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    textarea {
+      min-height: 100px;
+    }
+    button.send {
+      background: #28a745;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button.send:hover {
+      background: #218838;
+    }
+    @media (max-width: 600px) {
+      nav button {
+        flex: 1 1 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Bright Academy Student Portal</h1>
+  </header>
+
+  <!-- Login Page -->
+  <div class="container" id="loginPage">
+    <h2>Student Login</h2>
+    <label>Admission Number</label>
+    <input type="text" id="admissionNumber" placeholder="Enter admission number">
+    <label>Password</label>
+    <input type="password" id="password" placeholder="Enter password">
+    <button onclick="login()">Login</button>
+  </div>
+
+  <!-- Portal Page -->
+  <div class="container hidden" id="portalPage">
+    <nav>
+      <button onclick="showSection('dashboard')">Dashboard</button>
+      <button onclick="showSection('academics')">Academics</button>
+      <button onclick="showSection('fees')">Fees Balance</button>
+      <button onclick="showSection('teacherMsg')">Class Teacher Message</button>
+      <button onclick="showSection('termDates')">Term Dates</button>
+      <button onclick="showSection('contactTeacher')">Contact Teacher</button>
+      <button onclick="showSection('contactPrincipal')">Contact Principal</button>
+      <button class="logout" onclick="logout()">Logout</button>
+    </nav>
+
+    <!-- Dashboard -->
+    <div class="section" id="dashboard">
+      <h2>Dashboard</h2>
+      <p>Welcome, <span id="studentName"></span>!</p>
+      <p><strong>Latest Teacher Message:</strong> Work hard this term.</p>
+      <p><strong>Fees Balance:</strong> <span id="feesBalance">10,500 KES</span></p>
+      <p><strong>Next Term Starts:</strong> 2nd September 2025</p>
+    </div>
+
+    <!-- Academics -->
+    <div class="section hidden" id="academics">
+      <h2>Academics</h2>
+      <p>Your academic results will appear here.</p>
+    </div>
+
+    <!-- Fees -->
+    <div class="section hidden" id="fees">
+      <h2>Fees Balance</h2>
+      <p>Your current fees balance is: <strong id="feesBalanceDetails">10,500 KES</strong></p>
+    </div>
+
+    <!-- Teacher Message -->
+    <div class="section hidden" id="teacherMsg">
+      <h2>Class Teacher Message</h2>
+      <p>Keep up the good work!</p>
+    </div>
+
+    <!-- Term Dates -->
+    <div class="section hidden" id="termDates">
+      <h2>Term Dates</h2>
+      <ul>
+        <li>Term 1: 6th Jan – 5th Apr</li>
+        <li>Term 2: 2nd May – 7th Aug</li>
+        <li>Term 3: 2nd Sept – 15th Nov</li>
+      </ul>
+    </div>
+
+    <!-- Contact Teacher -->
+    <div class="section hidden" id="contactTeacher">
+      <h2>Contact Class Teacher</h2>
+      <textarea id="teacherMsgBox" placeholder="Write your message..."></textarea>
+      <button class="send" onclick="sendMessage('teacher')">Send</button>
+    </div>
+
+    <!-- Contact Principal -->
+    <div class="section hidden" id="contactPrincipal">
+      <h2>Contact Principal</h2>
+      <textarea id="principalMsgBox" placeholder="Write your message..."></textarea>
+      <button class="send" onclick="sendMessage('principal')">Send</button>
+    </div>
+  </div>
+
+  <script>
+    // Example students
+    const students = {
+      "BA001": { password: "1234", name: "Milka Moraa" },
+      "BA002": { password: "5678", name: "Grace Wangari" }
+    };
+
+    function login() {
+      const adm = document.getElementById("admissionNumber").value.trim();
+      const pwd = document.getElementById("password").value.trim();
+
+      if (!adm || !pwd) {
+        alert("Please enter both admission number and password.");
+        return;
+      }
+
+      if (students[adm] && students[adm].password === pwd) {
+        document.getElementById("loginPage").classList.add("hidden");
+        document.getElementById("portalPage").classList.remove("hidden");
+        document.getElementById("studentName").textContent = students[adm].name;
+      } else {
+        alert("Invalid admission number or password.");
+      }
+    }
+
+    function logout() {
+      document.getElementById("portalPage").classList.add("hidden");
+      document.getElementById("loginPage").classList.remove("hidden");
+      document.getElementById("admissionNumber").value = "";
+      document.getElementById("password").value = "";
+    }
+
+    function showSection(id) {
+      document.querySelectorAll(".section").forEach(sec => sec.classList.add("hidden"));
+      document.getElementById(id).classList.remove("hidden");
+    }
+
+    function sendMessage(to) {
+      const boxId = to === "teacher" ? "teacherMsgBox" : "principalMsgBox";
+      const message = document.getElementById(boxId).value.trim();
+
+      if (!message) {
+        alert("Please enter a message before sending.");
+        return;
+      }
+
+      alert(`Message sent to ${to}: ${message}`);
+      document.getElementById(boxId).value = "";
+    }
+  </script>
+</body>
+</html>
+
