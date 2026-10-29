@@ -1,0 +1,1266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#f5e3dc">
+<title>Mental Health by Micah</title>
+
+<style>
+:root {
+  --peach:#f5e3dc;
+  --lilac:#e9e1f5;
+  --green:#dcefe3;
+  --primary:#38765b;
+  --dark:#243c32;
+  --surface:#ffffff;
+  --background:#f8f7f5;
+  --text:#29352f;
+  --muted:#69766f;
+  --border:#e2e8e2;
+  --gold:#d9a746;
+  --shadow:0 5px 22px #263b3210;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--background);color:var(--text);
+  font:16px/1.7 Arial,Helvetica,sans-serif;
+  transition:background .3s,color .3s;
+}
+body.dark{
+  --surface:#202b28;--background:#151d1a;--text:#edf5ef;
+  --muted:#b6c3ba;--border:#394741;--green:#293f35;
+  --peach:#43342f;--lilac:#373143;--primary:#8dc8a7;
+  --shadow:0 5px 22px #00000020;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+button:focus-visible,input:focus-visible,select:focus-visible,
+textarea:focus-visible,a:focus-visible{
+  outline:3px solid #d9a746;outline-offset:3px
+}
+a{color:var(--primary);overflow-wrap:anywhere}
+img{max-width:100%}
+header{
+  background:linear-gradient(130deg,var(--peach),var(--lilac),var(--green));
+  text-align:center;padding:30px 16px 26px;
+  border-bottom:4px solid var(--primary)
+}
+.brand{font-size:12px;font-weight:bold;letter-spacing:4px}
+header h1{font-size:clamp(28px,5vw,44px);margin:8px 0;color:var(--dark)}
+header p{margin:5px auto;max-width:650px}
+.profile{
+  width:125px;height:125px;border-radius:50%;overflow:hidden;
+  margin:18px auto 10px;border:4px solid white;background:#ffffffa0;
+  display:flex;align-items:center;justify-content:center;color:#365844;
+  box-shadow:var(--shadow)
+}
+.profile img{width:100%;height:100%;object-fit:cover;display:none}
+.profile span{font-size:12px;padding:12px}
+.small-btn{
+  border:1px solid var(--border);border-radius:9px;padding:8px 12px;
+  background:var(--surface);color:var(--text)
+}
+.top-tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px}
+nav{
+  display:flex;gap:7px;flex-wrap:wrap;justify-content:center;
+  background:var(--surface);padding:12px;position:sticky;top:0;
+  z-index:20;border-bottom:1px solid var(--border)
+}
+nav button{
+  border:1px solid var(--border);background:var(--surface);color:var(--text);
+  padding:9px 12px;border-radius:10px;font-size:13px
+}
+nav button.active,nav button:hover{background:var(--primary);color:white}
+main{max-width:1100px;margin:auto;padding:20px}
+.section{
+  display:none;background:var(--surface);border:1px solid var(--border);
+  border-radius:17px;padding:clamp(17px,4vw,32px);box-shadow:var(--shadow);
+  animation:appear .25s ease
+}
+.section.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+h2{color:var(--primary);font-size:clamp(23px,4vw,30px);line-height:1.3}
+h3{font-size:19px;margin-top:24px}
+p{overflow-wrap:anywhere}
+.muted{color:var(--muted);font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.three{grid-template-columns:repeat(3,minmax(0,1fr))}
+.card{
+  background:var(--background);border:1px solid var(--border);
+  border-radius:13px;padding:17px;min-width:0
+}
+.card h3{margin-top:0}
+.tint-peach{background:var(--peach)}
+.tint-lilac{background:var(--lilac)}
+.tint-green{background:var(--green)}
+.stat{font-size:28px;font-weight:bold;color:var(--primary)}
+.action{
+  display:inline-block;border:0;border-radius:9px;background:var(--primary);
+  color:white;padding:10px 15px;margin:4px 4px 4px 0;font-weight:600
+}
+.action:hover{filter:brightness(.92)}
+.action.secondary{background:var(--lilac);color:var(--dark)}
+.action.danger{background:#a64040}
+input[type=text],input[type=date],select,textarea{
+  display:block;width:100%;padding:11px;margin:6px 0 14px;
+  background:var(--surface);color:var(--text);border:1px solid var(--border);
+  border-radius:9px
+}
+textarea{min-height:90px;resize:vertical}
+label{display:block;font-weight:600;font-size:14px}
+fieldset{border:1px solid var(--border);border-radius:12px;margin:14px 0;padding:14px}
+legend{font-weight:bold;color:var(--primary);padding:0 6px}
+.option{display:flex;align-items:flex-start;gap:9px;margin:8px 0;font-weight:normal}
+.option input{margin-top:7px}
+.quote{
+  background:var(--peach);border-left:5px solid var(--gold);
+  border-radius:8px;padding:16px;margin:12px 0
+}
+.quote blockquote{margin:0;font-size:17px;font-style:italic}
+.quote small{display:block;margin-top:7px;color:var(--muted)}
+.notice{
+  border-left:4px solid var(--primary);padding:12px 15px;
+  background:var(--green);border-radius:6px;margin:15px 0
+}
+.progress{height:10px;background:var(--border);border-radius:20px;overflow:hidden}
+.progress div{height:100%;width:0;background:var(--primary);transition:width .3s}
+.mood-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.mood{
+  background:var(--surface);border:1px solid var(--border);border-radius:12px;
+  padding:13px 4px;text-align:center;color:var(--text)
+}
+.mood span{display:block;font-size:29px}
+.mood.selected{border:2px solid var(--primary);background:var(--green)}
+.list-item{
+  display:flex;align-items:flex-start;gap:10px;padding:10px 0;
+  border-bottom:1px solid var(--border)
+}
+.list-item input{margin-top:8px}
+.list-item .item-text{flex:1;min-width:0}
+.done{text-decoration:line-through;color:var(--muted)}
+.breath-wrap{text-align:center;padding:20px 5px}
+.breath-circle{
+  width:170px;height:170px;margin:18px auto;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  background:radial-gradient(circle,var(--surface),var(--green));
+  border:3px solid var(--primary);box-shadow:0 0 0 12px #76aa8a16;
+  transform:scale(.85);transition:transform 4s ease-in-out
+}
+.breath-circle.expand{transform:scale(1.12)}
+#breathInstruction{font-size:20px;font-weight:bold}
+.big-number{font-size:30px;font-weight:bold;color:var(--primary)}
+footer{text-align:center;background:var(--surface);border-top:1px solid var(--border);padding:24px}
+.hidden{display:none!important}
+.small{font-size:12px;color:var(--muted)}
+hr{border:0;border-top:1px solid var(--border);margin:22px 0}
+@media(max-width:700px){
+  .grid,.three{grid-template-columns:1fr}
+  main{padding:10px}
+  nav{position:static}
+  nav button{flex:1 1 40%}
+  .mood-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+@media print{
+  nav,.top-tools,.action,.photo-control,footer{display:none!important}
+  .section{display:block!important;box-shadow:none;margin-bottom:20px}
+  body{background:white;color:black}
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="brand">LEARN · GROW · LIVE WELL</div>
+  <h1>MENTAL HEALTH BY MICAH</h1>
+  <p>Supporting minds, strengthening families and building better futures.</p>
+  <div class="profile">
+    <img id="profileImage" alt="Your profile photo">
+    <span id="photoPlaceholder">Your photo goes here</span>
+  </div>
+  <label class="photo-control small-btn" for="photoInput"
+    style="display:inline-block;cursor:pointer">Add or Change Photo</label>
+  <input id="photoInput" type="file" accept="image/*" class="hidden">
+  <div class="top-tools">
+    <button class="small-btn" id="themeButton">🌙 Dark mode</button>
+    <button class="small-btn" id="textButton">A+ Larger text</button>
+    <button class="small-btn" onclick="window.print()">🖨 Print</button>
+  </div>
+</header>
+
+<nav aria-label="Application navigation">
+  <button class="active" data-page="home">🏠 Home</button>
+  <button data-page="mood">💚 Mood Tracker</button>
+  <button data-page="relax">🌿 Relaxation</button>
+  <button data-page="encourage">🙏 Encouragement</button>
+  <button data-page="career">🎯 Career</button>
+  <button data-page="study">📚 Study Planner</button>
+  <button data-page="substance">Substance Abuse</button>
+  <button data-page="parenting">Child Discipline</button>
+  <button data-page="family">Family Wellbeing</button>
+  <button data-page="mental">Mental Health</button>
+</nav>
+
+<main>
+
+<!-- HOME DASHBOARD -->
+<section class="section active" id="home">
+  <h2 id="welcome">Welcome to Mental Health by Micah</h2>
+  <p>
+    A welcoming space for emotional wellbeing, personal growth,
+    education, family life and faith-based encouragement.
+  </p>
+
+  <div class="card tint-peach">
+    <label for="displayName">What should we call you?</label>
+    <input id="displayName" type="text" maxlength="50"
+      placeholder="Enter your preferred name">
+    <button class="action" id="saveName">Personalize My Welcome</button>
+  </div>
+
+  <h3>Your Personal Dashboard</h3>
+  <div class="grid three">
+    <div class="card tint-green">
+      <div>💚</div>
+      <div class="stat" id="moodCount">0</div>
+      <div>Saved mood entries</div>
+    </div>
+    <div class="card tint-lilac">
+      <div>📚</div>
+      <div class="stat" id="taskCount">0/0</div>
+      <div>Study tasks completed</div>
+    </div>
+    <div class="card tint-peach">
+      <div>🌱</div>
+      <div class="stat" id="challengeCount">0/7</div>
+      <div>Growth challenge days</div>
+    </div>
+  </div>
+
+  <h3>Today's Encouragement</h3>
+  <div class="quote">
+    <blockquote id="homeVerse">“Be still, and know that I am God.”</blockquote>
+    <small id="homeVerseRef">Psalm 46:10 (KJV)</small>
+    <button class="action secondary" onclick="showPage('encourage')">
+      More Encouragement
+    </button>
+  </div>
+
+  <h3>Explore Your Journey</h3>
+  <div class="grid">
+    <div class="card">
+      <h3>💚 Understand your feelings</h3>
+      Record your mood and reflect on what may be affecting you.
+      <br><button class="action" onclick="showPage('mood')">Open Mood Tracker</button>
+    </div>
+    <div class="card">
+      <h3>🌿 Take a calm moment</h3>
+      Try gentle paced breathing or a grounding exercise.
+      <br><button class="action" onclick="showPage('relax')">Open Relaxation</button>
+    </div>
+    <div class="card">
+      <h3>🎯 Explore your future</h3>
+      Reflect on your interests and discover career ideas.
+      <br><button class="action" onclick="showPage('career')">Explore Careers</button>
+    </div>
+    <div class="card">
+      <h3>📚 Reach your goals</h3>
+      Plan study sessions and monitor your progress.
+      <br><button class="action" onclick="showPage('study')">Open Study Planner</button>
+    </div>
+  </div>
+
+  <h3>Seven-Day Personal Growth Challenge</h3>
+  <p class="muted">Choose one small, healthy action each day. There is no penalty for missing a day.</p>
+  <div id="challengeList"></div>
+  <div class="progress"><div id="challengeProgress"></div></div>
+
+  <div class="notice">
+    <b>Your wellbeing matters.</b> This application provides educational
+    information, not a diagnosis or substitute for professional care.
+    You deserve respect, support and kindness.
+  </div>
+</section>
+
+<!-- MOOD TRACKER -->
+<section class="section" id="mood">
+  <h2>Daily Mood Tracker</h2>
+  <p>Check in with yourself. Every feeling deserves to be acknowledged.</p>
+
+  <h3>How are you feeling today?</h3>
+  <div class="mood-grid" id="moodChoices">
+    <button class="mood" data-mood="Happy" data-emoji="😊"><span>😊</span>Happy</button>
+    <button class="mood" data-mood="Calm" data-emoji="😌"><span>😌</span>Calm</button>
+    <button class="mood" data-mood="Hopeful" data-emoji="🌻"><span>🌻</span>Hopeful</button>
+    <button class="mood" data-mood="Worried" data-emoji="😟"><span>😟</span>Worried</button>
+    <button class="mood" data-mood="Sad" data-emoji="😔"><span>😔</span>Sad</button>
+    <button class="mood" data-mood="Stressed" data-emoji="😣"><span>😣</span>Stressed</button>
+  </div>
+
+  <label for="moodDate">Date</label>
+  <input id="moodDate" type="date">
+  <label for="moodNote">What might be influencing your mood?</label>
+  <textarea id="moodNote" maxlength="1500"
+    placeholder="Write a private reflection. You can leave this blank."></textarea>
+  <button class="action" id="saveMood">Save Mood Entry</button>
+
+  <div class="notice">
+    Your mood is not a grade. There are no wrong feelings, and a difficult
+    day does not define your worth.
+  </div>
+
+  <h3>Your Recent Mood Entries</h3>
+  <p class="muted">Entries are stored in this browser on this device.</p>
+  <div id="moodHistory"></div>
+  <button class="action danger" id="clearMoods">Delete All Mood Entries</button>
+</section>
+
+<!-- RELAXATION -->
+<section class="section" id="relax">
+  <h2>Relaxation and Breathing Studio</h2>
+  <p>
+    Choose a simple activity to pause, notice your surroundings and give
+    yourself a moment of calm. No special equipment is required.
+  </p>
+
+  <div class="card tint-green">
+    <h3>🌬 Gentle Paced Breathing</h3>
+    <p>Follow the expanding and contracting circle at a comfortable pace.
+      Breathe naturally; do not force deep breaths or hold your breath.</p>
+    <div class="breath-wrap">
+      <div class="breath-circle" id="breathCircle">
+        <div>
+          <div id="breathInstruction">Ready?</div>
+          <div class="small" id="breathSub">Your own comfortable pace</div>
+        </div>
+      </div>
+      <div class="big-number" id="breathTime">1:00</div>
+      <button class="action" id="startBreathing">Start 1-Minute Exercise</button>
+      <button class="action secondary" id="stopBreathing">Stop</button>
+      <p class="small" id="breathStatus" aria-live="polite">Pause whenever you need.</p>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="card tint-lilac">
+      <h3>🌳 Five-Senses Grounding</h3>
+      <p>Gently notice the world around you. There is no need to rush.</p>
+      <ol>
+        <li>Name five things you can see.</li>
+        <li>Notice four things you can feel.</li>
+        <li>Listen for three sounds.</li>
+        <li>Identify two smells, if comfortable.</li>
+        <li>Notice one taste or take a comfortable breath.</li>
+      </ol>
+    </div>
+    <div class="card tint-peach">
+      <h3>📝 Calm Reflection</h3>
+      <p>Ask yourself:</p>
+      <ul>
+        <li>What is one thing I can control right now?</li>
+        <li>What can wait until later?</li>
+        <li>Who could support me today?</li>
+        <li>What small action would help me feel supported?</li>
+      </ul>
+    </div>
+  </div>
+
+  <h3>Other Healthy Ways to Unwind</h3>
+  <ul>
+    <li>Take a gentle walk or stretch in a way that feels comfortable.</li>
+    <li>Listen to peaceful music or an encouraging SDA hymn.</li>
+    <li>Spend time outdoors and notice your surroundings.</li>
+    <li>Speak to a trusted person or write in a journal.</li>
+    <li>Take a break, drink water or follow a regular sleep routine.</li>
+  </ul>
+
+  <div class="notice">
+    If breathing exercises make you dizzy, uncomfortable or more anxious,
+    stop and breathe normally. You can choose grounding or another activity
+    instead. These exercises are not a substitute for medical care.
+  </div>
+</section>
+
+<!-- ENCOURAGEMENT -->
+<section class="section" id="encourage">
+  <h2>Daily Encouragement and Faith</h2>
+  <p>Find encouragement through Scripture, reflection and positive action.</p>
+
+  <div class="card tint-peach">
+    <h3>📖 Bible Verse for Reflection</h3>
+    <div class="quote">
+      <blockquote id="dailyVerse"></blockquote>
+      <small id="dailyReference"></small>
+    </div>
+    <button class="action" id="newVerse">Show Another Verse</button>
+  </div>
+
+  <h3>Words to Encourage You</h3>
+  <div class="quote">
+    <blockquote>You deserve the same kindness you so freely give to others.</blockquote>
+    <small>Self-compassion reflection — original wording</small>
+  </div>
+  <div class="quote">
+    <blockquote>You do not have to solve everything today. Begin with one manageable step.</blockquote>
+    <small>Personal growth reflection — original wording</small>
+  </div>
+  <div class="quote">
+    <blockquote>Asking for support is a positive step toward caring for yourself.</blockquote>
+    <small>Mental wellbeing reflection — original wording</small>
+  </div>
+
+  <h3>Ellen G. White and Christian Living</h3>
+  <p>
+    Explore original writings and verify quotations in their full context
+    before using them in teaching or sharing.
+  </p>
+  <ul>
+    <li><a href="https://m.egwwritings.org/" target="_blank" rel="noopener">Ellen G. White Writings — searchable collection</a></li>
+    <li><a href="https://whiteestate.org/" target="_blank" rel="noopener">Ellen G. White Estate — official resources</a></li>
+    <li><a href="https://www.adventist.org/" target="_blank" rel="noopener">Seventh-day Adventist Church — official website</a></li>
+  </ul>
+
+  <h3>SDA Music and Hope</h3>
+  <p>Find music that brings you comfort, hope and spiritual encouragement.</p>
+  <a href="https://www.youtube.com/results?search_query=Seventh-day+Adventist+hope+hymns"
+     target="_blank" rel="noopener">Explore SDA hymns about hope on YouTube</a>
+
+  <div class="notice">
+    Faith can be a meaningful source of comfort. It can complement
+    professional mental healthcare and should never be used to shame
+    someone for experiencing emotional difficulties.
+  </div>
+</section>
+
+<!-- CAREER DISCOVERY -->
+<section class="section" id="career">
+  <h2>Career Discovery Quiz</h2>
+  <p>
+    Answer these questions to explore career areas that may fit your
+    interests. The results are suggestions, not a professional assessment.
+  </p>
+
+  <form id="careerForm">
+    <fieldset>
+      <legend>1. Which activity interests you most?</legend>
+      <label class="option"><input type="radio" name="interest" value="technology" required> Technology, computers and solving technical problems</label>
+      <label class="option"><input type="radio" name="interest" value="help"> Helping, teaching or supporting people</label>
+      <label class="option"><input type="radio" name="interest" value="science"> Science, research and discovering how things work</label>
+      <label class="option"><input type="radio" name="interest" value="creative"> Art, design, writing and creative work</label>
+      <label class="option"><input type="radio" name="interest" value="business"> Business, leadership and organizing projects</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>2. What is one of your strengths?</legend>
+      <label class="option"><input type="radio" name="strength" value="analysis" required> Analytical thinking and problem-solving</label>
+      <label class="option"><input type="radio" name="strength" value="communication"> Communication and explaining ideas</label>
+      <label class="option"><input type="radio" name="strength" value="creativity"> Creativity and imagination</label>
+      <label class="option"><input type="radio" name="strength" value="leadership"> Organizing and leading others</label>
+      <label class="option"><input type="radio" name="strength" value="care"> Listening and supporting others</label>
+    </fieldset>
+
+    <fieldset>
+      <legend>3. What work environment appeals to you?</legend>
+      <label class="option"><input type="radio" name="environment" value="digital" required> A digital or technical environment</label>
+      <label class="option"><input type="radio" name="environment" value="people"> A school, community or people-focused setting</label>
+      <label class="option"><input type="radio" name="environment" value="research"> A laboratory, research or analytical setting</label>
+      <label class="option"><input type="radio" name="environment" value="creative"> A creative or flexible setting</label>
+      <label class="option"><input type="radio" name="environment" value="business"> An office, organization or business</label>
+    </fieldset>
+
+    <button class="action" type="submit">Discover Career Ideas</button>
+  </form>
+  <div class="card hidden" id="careerResults" aria-live="polite"></div>
+  <p class="muted">Before committing to a career, research qualifications, training costs,
+    employment prospects and local opportunities.</p>
+</section>
+
+<!-- STUDY PLANNER -->
+<section class="section" id="study">
+  <h2>Smart Study Planner</h2>
+  <p>Turn large study goals into small, manageable tasks.</p>
+
+  <div class="card tint-lilac">
+    <h3>➕ Add a Study Task</h3>
+    <label for="taskName">Subject or task</label>
+    <input type="text" id="taskName" maxlength="150" placeholder="e.g. Revise organic chemistry">
+    <label for="taskDate">Target date (optional)</label>
+    <input type="date" id="taskDate">
+    <button class="action" id="addTask">Add Task</button>
+  </div>
+
+  <h3>Your Tasks</h3>
+  <div class="progress"><div id="taskProgress"></div></div>
+  <p id="taskSummary" class="muted">No tasks yet.</p>
+  <div id="taskList"></div>
+  <button class="action secondary" id="clearCompleted">Remove Completed Tasks</button>
+
+  <hr>
+  <h3>⏱ Study Timer</h3>
+  <p>Try studying for 25 minutes, then take a short break. Adjust this to your needs.</p>
+  <div class="card tint-green" style="text-align:center">
+    <div class="big-number" id="timerDisplay">25:00</div>
+    <label for="timerMinutes">Session length in minutes</label>
+    <select id="timerMinutes">
+      <option value="5">5 minutes</option>
+      <option value="15">15 minutes</option>
+      <option value="25" selected>25 minutes</option>
+      <option value="30">30 minutes</option>
+      <option value="45">45 minutes</option>
+      <option value="60">60 minutes</option>
+    </select>
+    <button class="action" id="startTimer">Start</button>
+    <button class="action secondary" id="pauseTimer">Pause</button>
+    <button class="action secondary" id="resetTimer">Reset</button>
+    <p id="timerStatus" aria-live="polite" class="muted">Ready when you are.</p>
+  </div>
+
+  <h3>Effective Study Strategies</h3>
+  <ul>
+    <li>Use active recall: test yourself without looking at your notes.</li>
+    <li>Use spaced practice: revisit information across several days.</li>
+    <li>Answer practice questions and review mistakes.</li>
+    <li>Reduce distractions and take reasonable breaks.</li>
+    <li>Maintain adequate sleep and a realistic timetable.</li>
+  </ul>
+  <a href="https://www.learningscientists.org/" target="_blank" rel="noopener">Explore evidence-informed learning strategies</a>
+</section>
+
+<!-- SUBSTANCE ABUSE -->
+<section class="section" id="substance">
+  <h2>Overcoming Drug and Substance Abuse</h2>
+  <p>
+    Substance use problems can affect health, relationships, learning and
+    everyday life. They are treatable, and seeking support is a positive step.
+  </p>
+
+  <h3>Possible Effects</h3>
+  <ul>
+    <li>Problems with memory, concentration and decision-making.</li>
+    <li>Changes in mood, sleep and behaviour.</li>
+    <li>Physical health complications that vary by substance.</li>
+    <li>Conflict in relationships and difficulties at school or work.</li>
+    <li>Accidents, overdose and other serious risks.</li>
+  </ul>
+
+  <h3>Steps Toward Recovery</h3>
+  <ol>
+    <li>Recognize the impact of substance use on your life.</li>
+    <li>Speak with a qualified healthcare or addiction professional.</li>
+    <li>Identify triggers and plan healthier ways to respond.</li>
+    <li>Build supportive relationships and regular routines.</li>
+    <li>Follow professional treatment recommendations.</li>
+    <li>Seek support again if difficulties return.</li>
+  </ol>
+
+  <div class="notice">
+    Dependence on alcohol or sedatives can cause dangerous withdrawal.
+    Seek medical guidance before stopping suddenly. If someone collapses,
+    cannot be awakened or has difficulty breathing, seek emergency medical
+    assistance immediately.
+  </div>
+
+  <div class="quote">
+    <blockquote>Your past does not have to determine your future.</blockquote>
+    <small>Personal growth reflection — original wording</small>
+  </div>
+
+  <h3>Scientific Resources</h3>
+  <ul>
+    <li><a href="https://nida.nih.gov/" target="_blank" rel="noopener">National Institute on Drug Abuse</a></li>
+    <li><a href="https://www.who.int/health-topics/drugs-psychoactive" target="_blank" rel="noopener">World Health Organization — Psychoactive Drugs</a></li>
+    <li><a href="https://www.samhsa.gov/substance-use" target="_blank" rel="noopener">SAMHSA — Substance Use Support</a></li>
+  </ul>
+</section>
+
+<!-- CHILD DISCIPLINE -->
+<section class="section" id="parenting">
+  <h2>Child Discipline and Positive Parenting</h2>
+  <p>
+    Positive discipline teaches responsibility and self-control while
+    respecting a child's dignity and emotional wellbeing.
+  </p>
+
+  <h3>Practical Principles</h3>
+  <ol>
+    <li>Set clear, realistic, age-appropriate expectations.</li>
+    <li>Explain rules and listen to children's questions.</li>
+    <li>Recognize effort and positive behaviour.</li>
+    <li>Use consistent, proportionate, non-violent consequences.</li>
+    <li>Model patience, respect and accountability.</li>
+    <li>Help children name emotions and solve problems.</li>
+    <li>Offer choices within reasonable boundaries.</li>
+    <li>Keep communication open as children grow.</li>
+    <li>Encourage independence appropriate to their age.</li>
+    <li>Repair relationships after disagreements.</li>
+  </ol>
+
+  <h3>What to Avoid</h3>
+  <ul>
+    <li>Physical punishment, threats and humiliation.</li>
+    <li>Insults or hurtful comparisons between children.</li>
+    <li>Unpredictable rules and disproportionate consequences.</li>
+  </ul>
+
+  <div class="card tint-peach">
+    <b>Example:</b> If a child refuses to study, calmly explore what is
+    making the task difficult. Break it into smaller steps, agree on a
+    routine and offer encouragement as the child progresses.
+  </div>
+
+  <h3>Further Reading</h3>
+  <a href="https://www.who.int/health-topics/violence-against-children"
+     target="_blank" rel="noopener">WHO — Violence Against Children</a>
+  <br>
+  <a href="https://www.unicef.org/parenting" target="_blank" rel="noopener">
+    UNICEF Parenting Resources
+  </a>
+  <br>
+  <a href="https://m.egwwritings.org/" target="_blank" rel="noopener">
+    Ellen G. White Writings — verify parenting references in context
+  </a>
+</section>
+
+<!-- FAMILY WELLBEING -->
+<section class="section" id="family">
+  <h2>Family Wellbeing</h2>
+  <p>
+    Healthy family relationships grow through communication, trust,
+    respect, shared responsibility and care.
+  </p>
+
+  <h3>Ways to Strengthen Family Life</h3>
+  <ul>
+    <li>Listen carefully before responding.</li>
+    <li>Share household responsibilities fairly.</li>
+    <li>Make time for meaningful activities together.</li>
+    <li>Express appreciation and affection.</li>
+    <li>Discuss disagreements calmly and respectfully.</li>
+    <li>Respect privacy and healthy personal boundaries.</li>
+    <li>Seek qualified support when problems persist.</li>
+  </ul>
+
+  <h3>Family Reflection Activity</h3>
+  <label for="familyAppreciation">One thing we appreciate about our family</label>
+  <textarea id="familyAppreciation" placeholder="Write a positive reflection"></textarea>
+  <label for="familyGoal">One healthy change we want to work on</label>
+  <textarea id="familyGoal" placeholder="Describe a realistic goal"></textarea>
+  <button class="action" id="saveFamily">Save Reflection on This Device</button>
+  <p id="familyStatus" class="muted" aria-live="polite"></p>
+
+  <div class="notice">
+    Where there is abuse, intimidation or immediate danger, prioritize
+    safety and seek appropriate support. No one should be pressured to
+    remain in an unsafe situation.
+  </div>
+
+  <a href="https://www.who.int/health-topics/mental-health"
+     target="_blank" rel="noopener">WHO — Mental Health Resources</a>
+</section>
+
+<!-- MENTAL HEALTH -->
+<section class="section" id="mental">
+  <h2>Mental Health and Emotional Wellbeing</h2>
+  <p>
+    Mental health affects how we think, feel, relate to others and manage
+    life's challenges. Everyone deserves care, respect and support.
+  </p>
+
+  <h3>Ways to Support Your Wellbeing</h3>
+  <ul>
+    <li>Maintain a regular sleep routine.</li>
+    <li>Engage in physical activity suited to your abilities.</li>
+    <li>Eat balanced meals and drink enough water.</li>
+    <li>Talk with trusted people about your feelings.</li>
+    <li>Use grounding, comfortable breathing or quiet reflection.</li>
+    <li>Set realistic goals and healthy boundaries.</li>
+    <li>Seek professional support when difficulties persist.</li>
+  </ul>
+
+  <h3>Possible Warning Signs</h3>
+  <ul>
+    <li>Persistent sadness, anxiety or hopelessness.</li>
+    <li>Withdrawing from people or activities you enjoy.</li>
+    <li>Major changes in sleep or appetite.</li>
+    <li>Difficulty concentrating or managing daily responsibilities.</li>
+    <li>Feeling overwhelmed for a prolonged period.</li>
+  </ul>
+
+  <p>
+    These signs do not automatically mean someone has a mental illness.
+    A qualified professional can help assess persistent or worsening symptoms.
+  </p>
+
+  <h3>Encouraging Reflections</h3>
+  <div class="quote">
+    <blockquote>You are allowed to rest, learn and begin again.</blockquote>
+    <small>Original wellbeing reflection</small>
+  </div>
+  <div class="quote">
+    <blockquote>One difficult day does not erase the progress you have made.</blockquote>
+    <small>Original wellbeing reflection</small>
+  </div>
+  <div class="quote">
+    <blockquote>You deserve support even when you cannot explain exactly how you feel.</blockquote>
+    <small>Original wellbeing reflection</small>
+  </div>
+
+  <h3>Depression Support</h3>
+  <p>
+    Depression can affect energy, sleep, appetite, concentration and the
+    ability to enjoy everyday activities. It is a health condition, not a
+    personal failure. Professional assessment and appropriate treatment can help.
+  </p>
+  <ul>
+    <li>Talk with someone you trust.</li>
+    <li>Break daily tasks into manageable steps.</li>
+    <li>Maintain regular meals and sleep as far as possible.</li>
+    <li>Seek help from a qualified mental health professional.</li>
+    <li>Seek urgent medical assistance if you or another person is in immediate danger.</li>
+  </ul>
+
+  <h3>Reliable Resources</h3>
+  <ul>
+    <li><a href="https://www.who.int/health-topics/mental-health" target="_blank" rel="noopener">WHO — Mental Health</a></li>
+    <li><a href="https://www.nimh.nih.gov/health" target="_blank" rel="noopener">National Institute of Mental Health</a></li>
+    <li><a href="https://www.mhanational.org/" target="_blank" rel="noopener">Mental Health America</a></li>
+  </ul>
+</section>
+
+</main>
+
+<footer>
+  <b>MENTAL HEALTH BY MICAH</b>
+  <p>Learn. Grow. Live Well.</p>
+  <p class="small">Educational content only. Not a substitute for medical,
+    psychological, addiction-treatment or other professional advice.</p>
+  <p class="small">Your journal, mood entries and tasks remain in this browser.
+    Avoid entering highly sensitive personal information on a shared device.</p>
+  <button class="action" id="exportData">Export My Personal Data</button>
+  <button class="action secondary" id="deleteAllData">Clear Saved App Data</button>
+</footer>
+
+<script>
+"use strict";
+
+/* LOCAL STORAGE
+   Data is kept in this browser on this device.
+   It is not a secure account system or cloud backup.
+*/
+const STORE_KEY = "mhbm_data_v1";
+const defaults = {
+  name:"",
+  theme:"light",
+  largeText:false,
+  photo:"",
+  moods:[],
+  tasks:[],
+  challenge:[],
+  family:{appreciation:"",goal:""}
+};
+
+function loadData(){
+  try{
+    const saved = JSON.parse(localStorage.getItem(STORE_KEY) || "{}");
+    return {...defaults,...saved,
+      moods:Array.isArray(saved.moods)?saved.moods:[],
+      tasks:Array.isArray(saved.tasks)?saved.tasks:[],
+      challenge:Array.isArray(saved.challenge)?saved.challenge:[],
+      family:saved.family || defaults.family
+    };
+  }catch(error){
+    return {...defaults};
+  }
+}
+let data = loadData();
+
+function saveData(){
+  try{
+    localStorage.setItem(STORE_KEY,JSON.stringify(data));
+    return true;
+  }catch(error){
+    alert("The browser could not save your changes. Storage may be full. Try a smaller photo or export your data.");
+    return false;
+  }
+}
+
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  })[c]);
+}
+
+function localDate(){
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  return new Date(now.getTime()-offset*60000).toISOString().slice(0,10);
+}
+
+/* NAVIGATION */
+const pages = [...document.querySelectorAll(".section")];
+const navButtons = [...document.querySelectorAll("nav button")];
+
+function showPage(id){
+  pages.forEach(page=>page.classList.toggle("active",page.id===id));
+  navButtons.forEach(button=>{
+    const active=button.dataset.page===id;
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-current",active?"page":"false");
+  });
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+navButtons.forEach(button=>button.addEventListener("click",()=>showPage(button.dataset.page)));
+window.showPage=showPage;
+
+/* PROFILE PHOTO: resized before saving locally */
+const photoInput=document.getElementById("photoInput");
+const profileImage=document.getElementById("profileImage");
+const photoPlaceholder=document.getElementById("photoPlaceholder");
+
+function displayPhoto(){
+  if(data.photo){
+    profileImage.src=data.photo;
+    profileImage.style.display="block";
+    photoPlaceholder.style.display="none";
+  }else{
+    profileImage.removeAttribute("src");
+    profileImage.style.display="none";
+    photoPlaceholder.style.display="block";
+  }
+}
+photoInput.addEventListener("change",event=>{
+  const file=event.target.files[0];
+  if(!file)return;
+  if(!file.type.startsWith("image/")){
+    alert("Choose an image file.");return;
+  }
+  const reader=new FileReader();
+  reader.onload=()=>{
+    const image=new Image();
+    image.onload=()=>{
+      const canvas=document.createElement("canvas");
+      const max=600;
+      const scale=Math.min(1,max/Math.max(image.width,image.height));
+      canvas.width=Math.round(image.width*scale);
+      canvas.height=Math.round(image.height*scale);
+      const ctx=canvas.getContext("2d");
+      ctx.drawImage(image,0,0,canvas.width,canvas.height);
+      data.photo=canvas.toDataURL("image/jpeg",0.78);
+      if(saveData())displayPhoto();
+    };
+    image.onerror=()=>alert("The image could not be opened.");
+    image.src=reader.result;
+  };
+  reader.readAsDataURL(file);
+});
+
+/* PERSONALIZATION */
+function applyPreferences(){
+  document.body.classList.toggle("dark",data.theme==="dark");
+  document.body.style.fontSize=data.largeText?"18px":"16px";
+  document.getElementById("themeButton").textContent=
+    data.theme==="dark"?"☀️ Light mode":"🌙 Dark mode";
+}
+document.getElementById("themeButton").addEventListener("click",()=>{
+  data.theme=data.theme==="dark"?"light":"dark";
+  saveData();applyPreferences();
+});
+document.getElementById("textButton").addEventListener("click",()=>{
+  data.largeText=!data.largeText;
+  saveData();applyPreferences();
+});
+document.getElementById("saveName").addEventListener("click",()=>{
+  data.name=document.getElementById("displayName").value.trim().slice(0,50);
+  saveData();renderDashboard();
+});
+function renderDashboard(){
+  document.getElementById("displayName").value=data.name;
+  document.getElementById("welcome").textContent=
+    data.name?"Welcome, "+data.name+"!":"Welcome to Mental Health by Micah";
+  document.getElementById("moodCount").textContent=data.moods.length;
+  const completed=data.tasks.filter(t=>t.done).length;
+  document.getElementById("taskCount").textContent=completed+"/"+data.tasks.length;
+  document.getElementById("challengeCount").textContent=data.challenge.length+"/7";
+  document.getElementById("taskProgress").style.width=
+    (data.tasks.length?completed/data.tasks.length*100:0)+"%";
+  renderChallenge();
+}
+
+/* MOOD TRACKER */
+let selectedMood=null;
+document.getElementById("moodDate").value=localDate();
+
+document.querySelectorAll(".mood").forEach(button=>{
+  button.addEventListener("click",()=>{
+    selectedMood=button.dataset.mood;
+    document.querySelectorAll(".mood").forEach(b=>b.classList.remove("selected"));
+    button.classList.add("selected");
+  });
+});
+
+document.getElementById("saveMood").addEventListener("click",()=>{
+  if(!selectedMood){alert("Please choose a mood first.");return;}
+  const date=document.getElementById("moodDate").value;
+  if(!date){alert("Choose a date.");return;}
+  const button=document.querySelector('.mood[data-mood="'+selectedMood+'"]');
+  data.moods.unshift({
+    id:Date.now(),date,mood:selectedMood,emoji:button.dataset.emoji,
+    note:document.getElementById("moodNote").value.trim().slice(0,1500)
+  });
+  data.moods=data.moods.slice(0,500);
+  if(saveData()){
+    document.getElementById("moodNote").value="";
+    selectedMood=null;
+    document.querySelectorAll(".mood").forEach(b=>b.classList.remove("selected"));
+    renderMoods();renderDashboard();
+  }
+});
+
+function renderMoods(){
+  const root=document.getElementById("moodHistory");
+  if(!data.moods.length){
+    root.innerHTML='<p class="muted">Your saved mood entries will appear here.</p>';return;
+  }
+  root.innerHTML=data.moods.slice(0,30).map(item=>`
+    <div class="list-item">
+      <div style="font-size:25px">${escapeHTML(item.emoji)}</div>
+      <div class="item-text">
+        <b>${escapeHTML(item.mood)}</b> · ${escapeHTML(item.date)}
+        ${item.note?`<p>${escapeHTML(item.note)}</p>`:""}
+      </div>
+      <button class="small-btn" data-delete-mood="${item.id}" aria-label="Delete mood entry">Delete</button>
+    </div>`).join("");
+  root.querySelectorAll("[data-delete-mood]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      data.moods=data.moods.filter(m=>m.id!==Number(button.dataset.deleteMood));
+      saveData();renderMoods();renderDashboard();
+    });
+  });
+}
+document.getElementById("clearMoods").addEventListener("click",()=>{
+  if(confirm("Delete all saved mood entries? This cannot be undone.")){
+    data.moods=[];saveData();renderMoods();renderDashboard();
+  }
+});
+
+/* BREATHING STUDIO */
+let breathInterval=null,breathRemaining=60,breathElapsed=0;
+const breathCircle=document.getElementById("breathCircle");
+const breathInstruction=document.getElementById("breathInstruction");
+const breathSub=document.getElementById("breathSub");
+const breathTime=document.getElementById("breathTime");
+const breathStatus=document.getElementById("breathStatus");
+
+function formatTime(seconds){
+  return Math.floor(seconds/60)+":"+String(seconds%60).padStart(2,"0");
+}
+function stopBreathing(message){
+  if(breathInterval)clearInterval(breathInterval);
+  breathInterval=null;
+  breathCircle.classList.remove("expand");
+  breathInstruction.textContent="Ready?";
+  breathSub.textContent="Your own comfortable pace";
+  breathStatus.textContent=message || "Paused. Resume when comfortable.";
+  document.getElementById("startBreathing").textContent="Start 1-Minute Exercise";
+}
+document.getElementById("startBreathing").addEventListener("click",()=>{
+  if(breathInterval)return;
+  if(breathRemaining<=0)breathRemaining=60;
+  breathStatus.textContent="Breathe comfortably. Stop if you feel unwell.";
+  document.getElementById("startBreathing").textContent="Exercise Running";
+  function tick(){
+    if(breathRemaining<=0){
+      breathRemaining=0;
+      breathTime.textContent="0:00";
+      stopBreathing("One minute complete. Take a moment to notice how you feel.");
+      return;
+    }
+    const phase=breathElapsed%8;
+    if(phase<4){
+      breathInstruction.textContent="Breathe in gently";
+      breathSub.textContent="No need to take a deep breath";
+      breathCircle.classList.add("expand");
+    }else{
+      breathInstruction.textContent="Breathe out gently";
+      breathSub.textContent="Let your breath flow naturally";
+      breathCircle.classList.remove("expand");
+    }
+    breathTime.textContent=formatTime(breathRemaining);
+    breathRemaining--;
+    breathElapsed++;
+  }
+  tick();
+  breathInterval=setInterval(tick,1000);
+});
+document.getElementById("stopBreathing").addEventListener("click",()=>{
+  stopBreathing("Exercise stopped. Return to normal breathing.");
+  breathRemaining=60;breathElapsed=0;breathTime.textContent="1:00";
+});
+
+/* BIBLE VERSE CARDS */
+const verses=[
+  {text:"Be still, and know that I am God.",ref:"Psalm 46:10 (KJV)"},
+  {text:"The Lord is my shepherd; I shall not want.",ref:"Psalm 23:1 (KJV)"},
+  {text:"Casting all your care upon him; for he careth for you.",ref:"1 Peter 5:7 (KJV)"},
+  {text:"Fear thou not; for I am with thee: be not dismayed; for I am thy God.",ref:"Isaiah 41:10 (KJV)"},
+  {text:"Come unto me, all ye that labour and are heavy laden, and I will give you rest.",ref:"Matthew 11:28 (KJV)"},
+  {text:"The Lord is nigh unto them that are of a broken heart.",ref:"Psalm 34:18 (KJV)"},
+  {text:"I can do all things through Christ which strengtheneth me.",ref:"Philippians 4:13 (KJV)"},
+  {text:"Let not your heart be troubled: ye believe in God, believe also in me.",ref:"John 14:1 (KJV)"},
+  {text:"This is the day which the Lord hath made; we will rejoice and be glad in it.",ref:"Psalm 118:24 (KJV)"},
+  {text:"And the peace of God, which passeth all understanding, shall keep your hearts and minds through Christ Jesus.",ref:"Philippians 4:7 (KJV)"}
+];
+let verseIndex=Math.floor(Math.random()*verses.length);
+function renderVerse(){
+  const verse=verses[verseIndex];
+  document.getElementById("dailyVerse").textContent="“"+verse.text+"”";
+  document.getElementById("dailyReference").textContent=verse.ref;
+  document.getElementById("homeVerse").textContent="“"+verse.text+"”";
+  document.getElementById("homeVerseRef").textContent=verse.ref;
+}
+document.getElementById("newVerse").addEventListener("click",()=>{
+  verseIndex=(verseIndex+1)%verses.length;renderVerse();
+});
+
+/* CAREER QUIZ */
+const careerIdeas={
+  technology:{
+    title:"Technology and Digital Careers",
+    careers:["Software development","Cybersecurity","Data analysis","IT support","Networking and cloud computing"],
+    detail:"Explore basic courses, practical projects and entry requirements for each pathway."
+  },
+  help:{
+    title:"Education and People-Focused Careers",
+    careers:["Teaching","Community development","Human resources","Social services","Training and education support"],
+    detail:"Research the professional qualifications and ethical requirements for your chosen role."
+  },
+  science:{
+    title:"Science and Research Careers",
+    careers:["Laboratory science","Environmental science","Scientific research","Statistics","Health-related sciences"],
+    detail:"Compare relevant degree or diploma programmes and their admission requirements."
+  },
+  creative:{
+    title:"Creative and Communication Careers",
+    careers:["Graphic design","Writing and editing","Digital media","Photography","Communication"],
+    detail:"Build a portfolio and practise with projects that demonstrate your skills."
+  },
+  business:{
+    title:"Business and Leadership Careers",
+    careers:["Entrepreneurship","Project coordination","Business administration","Accounting pathways","Operations management"],
+    detail:"Explore accredited training, practical experience and the skills employers request."
+  }
+};
+document.getElementById("careerForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  const form=new FormData(event.currentTarget);
+  const interest=form.get("interest");
+  const strength=form.get("strength");
+  const environment=form.get("environment");
+  const result=careerIdeas[interest];
+  const strengthText={
+    analysis:"analytical thinking",
+    communication:"communication",
+    creativity:"creativity",
+    leadership:"organization and leadership",
+    care:"listening and supporting others"
+  }[strength];
+  const envText={
+    digital:"digital or technical work",
+    people:"people-focused environments",
+    research:"research and analysis",
+    creative:"creative environments",
+    business:"business and organizational work"
+  }[environment];
+  const root=document.getElementById("careerResults");
+  root.classList.remove("hidden");
+  root.innerHTML=`<h3>${escapeHTML(result.title)}</h3>
+    <p>Your answers suggest that you may enjoy ${escapeHTML(envText)}
+    and can draw on your strength in ${escapeHTML(strengthText)}.</p>
+    <b>Career ideas to investigate</b><ul>
+    ${result.careers.map(c=>"<li>"+escapeHTML(c)+"</li>").join("")}
+    </ul><p>${escapeHTML(result.detail)}</p>
+    <p class="muted">These suggestions are for exploration only. They do not predict success or replace professional career guidance.</p>`;
+  root.scrollIntoView({behavior:"smooth",block:"nearest"});
+});
+
+/* STUDY TASKS */
+document.getElementById("addTask").addEventListener("click",()=>{
+  const name=document.getElementById("taskName").value.trim();
+  const date=document.getElementById("taskDate").value;
+  if(!name){alert("Enter a study task first.");return;}
+  data.tasks.push({id:Date.now(),name:name.slice(0,150),date,done:false});
+  data.tasks=data.tasks.slice(-300);
+  if(saveData()){
+    document.getElementById("taskName").value="";
+    renderTasks();renderDashboard();
+  }
+});
+function renderTasks(){
+  const root=document.getElementById("taskList");
+  const completed=data.tasks.filter(t=>t.done).length;
+  document.getElementById("taskSummary").textContent=
+    data.tasks.length?`${completed} of ${data.tasks.length} tasks completed.`:"No tasks yet. Add your first study goal above.";
+  document.getElementById("taskProgress").style.width=
+    (data.tasks.length?completed/data.tasks.length*100:0)+"%";
+  if(!data.tasks.length){
+    root.innerHTML='<p class="muted">Your study tasks will appear here.</p>';return;
+  }
+  root.innerHTML=data.tasks.map(task=>`
+    <div class="list-item">
+      <input type="checkbox" data-task-check="${task.id}" ${task.done?"checked":""} aria-label="Mark task completed">
+      <div class="item-text ${task.done?"done":""}">
+        <b>${escapeHTML(task.name)}</b>
+        ${task.date?`<div class="small">Target: ${escapeHTML(task.date)}</div>`:""}
+      </div>
+      <button class="small-btn" data-task-delete="${task.id}">Delete</button>
+    </div>`).join("");
+  root.querySelectorAll("[data-task-check]").forEach(input=>{
+    input.addEventListener("change",()=>{
+      const task=data.tasks.find(t=>t.id===Number(input.dataset.taskCheck));
+      if(task)task.done=input.checked;
+      saveData();renderTasks();renderDashboard();
+    });
+  });
+  root.querySelectorAll("[data-task-delete]").forEach(button=>{
+    button.addEventListener("click",()=>{
+      data.tasks=data.tasks.filter(t=>t.id!==Number(button.dataset.taskDelete));
+      saveData();renderTasks();renderDashboard();
+    });
+  });
+}
+document.getElementById("clearCompleted").addEventListener("click",()=>{
+  data.tasks=data.tasks.filter(t=>!t.done);
+  saveData();renderTasks();renderDashboard();
+});
+
+/* STUDY TIMER */
+let timerInterval=null;
+let timerRemaining=25*60;
+const timerDisplay=document.getElementById("timerDisplay");
+const timerStatus=document.getElementById("timerStatus");
+function renderTimer(){
+  timerDisplay.textContent=formatTime(timerRemaining);
+}
+function stopTimer(){
+  if(timerInterval)clearInterval(timerInterval);
+  timerInterval=null;
+}
+document.getElementById("timerMinutes").addEventListener("change",()=>{
+  stopTimer();
+  timerRemaining=Number(document.getElementById("timerMinutes").value)*60;
+  renderTimer();timerStatus.textContent="Timer reset to your chosen session.";
+});
+document.getElementById("startTimer").addEventListener("click",()=>{
+  if(timerInterval)return;
+  if(timerRemaining<=0)timerRemaining=Number(document.getElementById("timerMinutes").value)*60;
+  timerStatus.textContent="Study session in progress. Take a break when you need one.";
+  timerInterval=setInterval(()=>{
+    timerRemaining--;
+    renderTimer();
+    if(timerRemaining<=0){
+      stopTimer();timerRemaining=0;renderTimer();
+      timerStatus.textContent="Session complete. Well done! Take a suitable break.";
+      alert("Your study session is complete. Well done!");
+    }
+  },1000);
+});
+document.getElementById("pauseTimer").addEventListener("click",()=>{
+  stopTimer();timerStatus.textContent="Timer paused.";
+});
+document.getElementById("resetTimer").addEventListener("click",()=>{
+  stopTimer();
+  timerRemaining=Number(document.getElementById("timerMinutes").value)*60;
+  renderTimer();timerStatus.textContent="Timer reset.";
+});
+
+/* SEVEN-DAY GROWTH CHALLENGE */
+const challenges=[
+  "Write down one thing you appreciate.",
+  "Take a short break and notice your surroundings.",
+  "Talk with someone you trust.",
+  "Complete one manageable learning task.",
+  "Offer a kind word or helpful action.",
+  "Spend a few quiet minutes reflecting or praying, if you wish.",
+  "Review your week and choose one achievable goal."
+];
+function renderChallenge(){
+  const root=document.getElementById("challengeList");
+  root.innerHTML=challenges.map((text,index)=>{
+    const checked=data.challenge.includes(index);
+    return `<div class="list-item">
+      <input type="checkbox" data-challenge="${index}" ${checked?"checked":""}>
+      <div class="item-text ${checked?"done":""}"><b>Day ${index+1}:</b> ${escapeHTML(text)}</div>
+    </div>`;
+  }).join("");
+  root.querySelectorAll("[data-challenge]").forEach(input=>{
+    input.addEventListener("change",()=>{
+      const index=Number(input.dataset.challenge);
+      if(input.checked){
+        if(!data.challenge.includes(index))data.challenge.push(index);
+      }else{
+        data.challenge=data.challenge.filter(n=>n!==index);
+      }
+      saveData();renderDashboard();
+    });
+  });
+  document.getElementById("challengeProgress").style.width=
+    data.challenge.length/7*100+"%";
+}
+
+/* FAMILY REFLECTION */
+document.getElementById("saveFamily").addEventListener("click",()=>{
+  data.family={
+    appreciation:document.getElementById("familyAppreciation").value.slice(0,2000),
+    goal:document.getElementById("familyGoal").value.slice(0,2000)
+  };
+  if(saveData())document.getElementById("familyStatus").textContent=
+    "Reflection saved in this browser.";
+});
+
+/* EXPORT */
+document.getElementById("exportData").addEventListener("click",()=>{
+  const exportCopy={...data,photo:""};
+  const blob=new Blob([JSON.stringify(exportCopy,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const link=document.createElement("a");
+  link.href=url;link.download="mental-health-by-micah-data.json";
+  link.click();URL.revokeObjectURL(url);
+});
+document.getElementById("deleteAllData").addEventListener("click",()=>{
+  if(!confirm("Delete all locally saved application data, including your photo, mood entries, tasks and preferences? Export anything you need first."))return;
+  stopTimer();stopBreathing();
+  localStorage.removeItem(STORE_KEY);
+  data={...defaults,moods:[],tasks:[],challenge:[],family:{appreciation:"",goal:""}};
+  document.getElementById("familyAppreciation").value="";
+  document.getElementById("familyGoal").value="";
+  document.getElementById("familyStatus").textContent="";
+  document.getElementById("moodNote").value="";
+  document.getElementById("taskName").value="";
+  document.getElementById("taskDate").value="";
+  document.getElementById("displayName").value="";
+  displayPhoto();applyPreferences();renderMoods();renderTasks();
+  renderDashboard();renderVerse();
+  timerRemaining=Number(document.getElementById("timerMinutes").value)*60;
+  renderTimer();
+});
+
+/* INITIALIZE */
+function initialize(){
+  displayPhoto();
+  applyPreferences();
+  renderDashboard();
+  renderMoods();
+  renderTasks();
+  renderVerse();
+  document.getElementById("familyAppreciation").value=data.family.appreciation||"";
+  document.getElementById("familyGoal").value=data.family.goal||"";
+  renderTimer();
+}
+initialize();
+</script>
+</body>
+</html>
+
